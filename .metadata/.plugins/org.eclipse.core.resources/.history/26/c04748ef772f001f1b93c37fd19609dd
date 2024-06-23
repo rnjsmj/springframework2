@@ -1,0 +1,25 @@
+package com.kh.spring.common.model.template;
+
+import com.kh.spring.common.model.vo.PageInfo;
+
+public class PageTemplate {
+	
+	public static PageInfo getPageInfo(int listCount, int currentPage, int pageLimit, int boardLimit) {
+		// 페이징마다 사용해야 하는 연산식
+		// 중복코드 발생을 방지하기위해 템플릿 클래스를 만들어서 사용
+		int maxPage = (int) Math.ceil((double) listCount / boardLimit);
+		int startPage = ((currentPage - 1) / pageLimit) * pageLimit + 1;
+		int endPage = startPage + pageLimit - 1;
+		if(endPage > maxPage) endPage = maxPage;
+		
+		
+		return PageInfo.builder().listCount(listCount)
+							 	 .currentPage(currentPage)
+								 .boardLimit(boardLimit)
+								 .pageLimit(pageLimit)
+								 .maxPage(maxPage)
+								 .startPage(startPage)
+								 .endPage(endPage)
+								 .build();
+	}
+}

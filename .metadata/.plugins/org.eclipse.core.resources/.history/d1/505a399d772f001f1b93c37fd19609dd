@@ -1,0 +1,13 @@
+package com.kh.spring.common.model.template;
+
+import com.kh.spring.common.model.vo.PageInfo;
+
+public class PageTemplate {
+	
+	public static PageInfo getPageInfo() {
+		
+		
+		
+		return null;
+	}
+}

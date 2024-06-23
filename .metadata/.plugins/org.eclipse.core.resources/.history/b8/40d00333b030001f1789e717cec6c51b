@@ -1,0 +1,15 @@
+package com.kh.spring.notice.controller;
+
+import org.springframework.stereotype.Controller;
+
+import com.kh.spring.notice.model.service.NoticeService;
+
+import lombok.RequiredArgsConstructor;
+
+@Controller
+@RequiredArgsConstructor
+public class NoticeController {
+		
+	private final NoticeService noticeService;
+	
+}

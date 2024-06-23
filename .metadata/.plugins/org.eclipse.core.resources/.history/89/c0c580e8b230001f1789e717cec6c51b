@@ -1,0 +1,33 @@
+package com.kh.spring.notice.controller;
+
+import java.util.List;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+
+import com.kh.spring.notice.model.service.NoticeService;
+import com.kh.spring.notice.model.vo.Notice;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@Controller
+@RequiredArgsConstructor
+@Slf4j
+public class NoticeController {
+		
+	private final NoticeService noticeService;
+	
+	@GetMapping("noticelist")
+	public String forwarding(Model model) {
+		
+		List<Notice> noticeList = noticeService.findAll();
+		model.addAttribute("list", noticeList);
+		
+		log.info("공지사항 행 개수 : {}", noticeList.size());
+		log.info("공지사항 : {}", noticeList);
+		
+		return "notice/list";
+	}
+}

@@ -1,0 +1,13 @@
+package com.kh.spring.member.model.service;
+
+import org.springframework.stereotype.Service;
+
+
+//Service : 비즈니스(도메인) 로직 작성
+@Service
+public class MemberServiceImpl implements MemberService {
+
+	
+	
+	
+}

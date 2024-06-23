@@ -1,0 +1,28 @@
+package com.kh.spring.notice.model.service;
+
+import com.kh.spring.member.model.service.MemberService;
+import com.kh.spring.member.model.vo.Member;
+
+public class NoticeServiceImpl implements MemberService {
+
+	@Override
+	public Member login(Member member) {
+		return null;
+	}
+
+	@Override
+	public int insert(Member member) {
+		return 0;
+	}
+
+	@Override
+	public int update(Member membeR) {
+		return 0;
+	}
+
+	@Override
+	public int delete(String userId) {
+		return 0;
+	}
+
+}
