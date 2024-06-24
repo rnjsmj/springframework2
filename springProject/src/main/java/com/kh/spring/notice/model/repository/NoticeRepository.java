@@ -28,5 +28,17 @@ public class NoticeRepository {
 	public int insert(SqlSessionTemplate sqlSession, Notice notice) {
 		return sqlSession.insert("noticeMapper.insert", notice);
 	}
+
+	public Notice findById(SqlSessionTemplate sqlSession, int noticeNo) {
+		return sqlSession.selectOne("noticeMapper.findById", noticeNo);
+	}
+
+	public int updateById(SqlSessionTemplate sqlSession, Notice notice) {
+		return sqlSession.update("noticeMapper.updateById", notice);
+	}
+
+	public int deleteById(SqlSessionTemplate sqlSession, int noticeNo) {
+		return sqlSession.delete("noticeMapper.deleteById", noticeNo);
+	}
 	
 }

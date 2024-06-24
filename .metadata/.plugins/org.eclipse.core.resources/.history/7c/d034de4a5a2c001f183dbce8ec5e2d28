@@ -1,7 +1,0 @@
-package com.kh.spring.member.model.service;
-
-
-public interface MemberService {
-	//Service Interface : 클래스의 사용법을 작성해놔야 구현 시 사용하기 좋음 --> 기획 내용!!!!
-	
-}

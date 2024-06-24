@@ -39,4 +39,20 @@ public class NoticeServcieImpl implements NoticeService {
 		return noticeRepository.insert(sqlSession, notice);
 	}
 
+	@Override
+	public Notice findById(int noticeNo) {
+		return noticeRepository.findById(sqlSession, noticeNo);
+	}
+
+	@Override
+	public int updateById(Notice notice) {
+		return noticeRepository.updateById(sqlSession, notice);
+	}
+
+	@Override
+	public int deleteById(int noticeNo) {
+		return noticeRepository.deleteById(sqlSession, noticeNo);
+	}
+
+	
 }

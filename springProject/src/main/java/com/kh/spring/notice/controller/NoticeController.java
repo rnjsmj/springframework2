@@ -90,4 +90,57 @@ public class NoticeController {
 		}
 		
 	}
+	
+	//공지사항 상세보기
+	@GetMapping("noticeDetail")
+	public String noticeDetail(@RequestParam("noticeNo") int noticeNo, Model model) {
+		
+		model.addAttribute("notice", noticeService.findById(noticeNo));
+		return "notice/detail";
+	}
+	
+	//공지사항 수정 페이지로 이동
+	@PostMapping("noticeUpdateForm")
+	public String noticeUpdateForm(int noticeNo, Model model, HttpSession session) {
+		
+//		if( session.getAttribute("loginUser") == null || ((Member) session.getAttribute("loginUser")).getUserId() != "admin") {
+//			return "redirect:/";
+//		} 
+		
+		model.addAttribute("notice", noticeService.findById(noticeNo));
+		return "notice/updateForm";
+	}
+	
+	
+	//공지사항 수정
+	@PostMapping("noticeUpdate")
+	public String noticeUpdate(Notice notice, Model model, HttpSession session) {
+		
+		if(noticeService.updateById(notice)>0) {
+			session.setAttribute("alertMsg", "공지사항이 수정되었습니다.");
+			return "redirect:/noticeDetail?noticeNo=" + notice.getNoticeNo();
+		} else {
+			model.addAttribute("errorMsg", "공지사항 수정 중 오류가 발생했습니다.");
+			return "common/errorPage";
+		}
+	}
+	
+	
+	//공지사항 삭제
+	@PostMapping("noticeDelete")
+	public String noticeDelete(int noticeNo, Model model, HttpSession session) {
+		
+//		if( session.getAttribute("loginUser") == null || ((Member) session.getAttribute("loginUser")).getUserId() != "admin") {
+//			return "redirect:/";
+//		}
+		
+		if(noticeService.deleteById(noticeNo)>0) {
+			session.setAttribute("alertMsg", "공지사항이 삭제되었습니다.");
+			return "redirect:/noticelist";
+		} else {
+			model.addAttribute("errorMsg", "공지사항 삭제 중 오류가 발생했습니다.");
+			return "common/errorPage";
+		}
+		
+	}
 }

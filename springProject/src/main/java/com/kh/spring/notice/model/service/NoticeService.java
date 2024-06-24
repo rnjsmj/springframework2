@@ -1,9 +1,9 @@
 package com.kh.spring.notice.model.service;
 
 import java.util.List;
-import java.util.Map;
 
 import org.apache.ibatis.session.RowBounds;
+
 
 import com.kh.spring.notice.model.vo.Notice;
 
@@ -18,4 +18,13 @@ public interface NoticeService {
 	
 	//공지 작성
 	int insert(Notice notice);
+	
+	//상세조회
+	Notice findById(int noticeNo);
+	
+	//수정
+	int updateById(Notice notice);
+	
+	//삭제
+	int deleteById(int noticeNo);
 }

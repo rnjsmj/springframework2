@@ -313,6 +313,7 @@ public class BoardController {
 		
 		// 새로운 첨부파일이 발생한 경우 새로운 첨부파일 정보로 수정해야 함
 		if (!reupFile.getOriginalFilename().equals("")) {
+			new File(session.getServletContext().getRealPath(board.getChangeName())).delete();
 			board.setOriginName(reupFile.getOriginalFilename());
 			board.setChangeName(saveFile(reupFile, session));
 		}

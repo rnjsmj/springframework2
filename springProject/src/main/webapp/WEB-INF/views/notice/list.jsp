@@ -73,7 +73,7 @@
                 		</c:when>
                 		<c:otherwise>
 	                    <c:forEach items="${list }" var="notice">
-	                    	<tr>
+	                    	<tr class="notice-detail" id="noticeNo-${notice.noticeNo }">
 	                    		<td>${notice.noticeNo }</td>
 	                    		<td>${notice.noticeTitle }</td>
 	                    		<td>${notice.createDate }</td>
@@ -147,7 +147,12 @@
             
             $(() => {
             	$('#searchForm option[value="${condition}"]').attr('selected', true);
-            })
+            	
+            	$('.notice-detail').click(e => {
+            		const id = e.currentTarget.id.split('-')[1];
+            		location.href = "noticeDetail?noticeNo=" + id;
+            	});
+            });
             </script>
         </div>
         <br><br>
