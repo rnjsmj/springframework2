@@ -76,7 +76,8 @@
                 		</c:when>
                 		<c:otherwise>
 	                    <c:forEach items="${list }" var="board">
-	                    	<tr>
+	                    	<tr class="board-detail" id="boardNo-${board.boardNo }">
+	                    	
 	                    		<td>${board.boardNo }</td>
 	                    		<td>${board.boardTitle }</td>
 	                    		<td>${board.boardWriter }</td>
@@ -87,6 +88,7 @@
 	                    				💾           			
 	                    			</c:if>
 	                    		</td>
+	                    		
 	                    	</tr>
 	                    </c:forEach>
 	                    </c:otherwise>
@@ -94,6 +96,37 @@
                 </tbody>
             </table>
             <br>
+            <!--  상세보기 이동 이벤트 -->
+            <script>
+            	$(() => {
+            		//script? : eventTarget과 eventType을 생각하기
+            		$('.board-detail').click(e => {
+            			//console.log('board-detail 클릭!!');
+            			
+            			//e.target : 이벤트가 발생한 시점에 선택한 요소
+            			//e.currentTarget : 이벤트 지정하여 이벤트를 동작시킨 요소
+            			const id = e.currentTarget.id.split('-')[1];
+            			
+            			//javaScript 속성값 변경
+            			//객체.속성 = 속성값;
+            			//URL 변경
+            			location.href = "board-detail?boardNo=" + id;
+            			
+            			
+            			// jQuery 자식 요소 찾기
+            			// 선택요소.find('선택자')
+            			// 선택요소.children();
+            			//console.log(e.currentTarget.children()); : e.currentTarget은 순수 자바스크립트 방식으로 가져온 값이므로 jQuery의 메서드인 children()을 사용할 수 없음
+            			// => console.log($(e.currentTarget).children())
+            			// 내부에서 첫번째요소를 찾는 방법 : children(':first') 또는 children().first()
+            			// 내부에서 n번째 요소를 찾는 방법 : children().eq(n-1)
+            			//console.log($(e.currentTarget).children().eq(0).text())
+            			
+            			// tr click 시 상세보기 인라인 이벤트 핸들러
+            			// 해당 tr요소의 onclick 속성으로 onclick="location.href=board-detail?boardNo=${board.boardNo}" 지정하는 방법
+            		});
+            	});
+            </script>
 
             <div id="pagingArea">
                 <ul class="pagination">

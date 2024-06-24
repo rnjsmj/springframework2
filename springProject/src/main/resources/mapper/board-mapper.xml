@@ -8,9 +8,11 @@
             BOARD_NO boardNo,
             BOARD_TITLE boardTitle,
             BOARD_WRITER boardWriter,
+            BOARD_CONTENT boardContent,
             COUNT,
             CREATE_DATE createDate,
-            ORIGIN_NAME originName
+            ORIGIN_NAME originName,
+            CHANGE_NAME changeName
 	</sql>
 
 
@@ -36,6 +38,7 @@
                     COUNT,
                     CREATE_DATE,
                     ORIGIN_NAME,
+                    CHANGE_NAME,
                     ROWNUM RNUM
               FROM
                     (SELECT
@@ -45,6 +48,7 @@
                             BOARD_CONTENT,
                             COUNT,
                             CREATE_DATE,
+                            CHANGE_NAME,
                             ORIGIN_NAME
                       FROM
                             BOARD
@@ -136,4 +140,51 @@
 		  		
 	</insert>
 	
+	<!-- 상세보기 시 조회수 증가 -->
+	<update id="increaseCount" parameterType="_int">
+		UPDATE
+				BOARD
+		   SET
+		   		COUNT = COUNT + 1
+		 WHERE
+		 		BOARD_NO = #{boardNo}
+		   AND
+		   		STATUS = 'Y'
+	</update>
+	
+	<!-- 게시글 상세보기 -->
+	<select id="findById" parameterType="_int" resultType="board">
+		<include refid="selectBoard"/>
+		  FROM
+		  		BOARD
+		 WHERE
+		 		BOARD_NO = #{boardNo}
+
+	</select>
+	
+	
+	<!-- 삭제 -->
+	<update id="deleteById" parameterType="_int">
+		UPDATE
+				BOARD
+		   SET
+		   		STATUS = 'N'
+		 WHERE 
+		 		BOARD_NO = #{boardNo}
+	</update>
+	
+	
+	<!-- 수정 -->
+	<update id="updateByBoard" parameterType="board">
+		UPDATE
+				BOARD
+		   SET
+		   		BOARD_TITLE = #{boardTitle},
+		   		BOARD_CONTENT = #{boardContent},
+		   		ORIGIN_NAME = #{originName},
+		   		CHANGE_NAME = #{changeName}
+		 WHERE
+		 		BOARD_NO = #{boardNo}
+		   		
+	</update>
 </mapper>

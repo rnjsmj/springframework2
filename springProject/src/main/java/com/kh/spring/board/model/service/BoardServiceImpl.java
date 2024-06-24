@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import com.kh.spring.board.model.repository.BoardRepository;
 import com.kh.spring.board.model.vo.Board;
-import com.kh.spring.common.model.vo.PageInfo;
 
 import lombok.RequiredArgsConstructor;
 
@@ -53,22 +52,22 @@ public class BoardServiceImpl implements BoardService{
 
 	@Override
 	public int increaseCount(int boardNo) {
-		return 0;
+		return boardRepository.increaseCount(sqlSession, boardNo);
 	}
 
 	@Override
 	public Board findById(int boardNo) {
-		return null;
+		return boardRepository.findById(sqlSession, boardNo);
 	}
 
 	@Override
-	public int delete(int boardNo) {
-		return 0;
+	public int deleteById(int boardNo) {
+		return boardRepository.deleteById(sqlSession, boardNo);
 	}
 
 	@Override
-	public int update(int boardNo) {
-		return 0;
+	public int updateByBoard(Board board) {
+		return boardRepository.updateByBoard(sqlSession, board);
 	}
 	
 	

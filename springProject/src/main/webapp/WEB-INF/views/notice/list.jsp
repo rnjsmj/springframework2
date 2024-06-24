@@ -89,22 +89,27 @@
             <div id="pagingArea">
                 <ul class="pagination">
                 	<!-- 전체 조회 하는 경우 / 검색 결과 조회 하는 경우 분리해야 함 -->
-                	
                 	<c:choose>
                 		<c:when test="${ empty condition }">
-                			<!-- 이전 -->
-                			<c:choose>
+                			<c:set var="baseUrl" value="noticelist?" />
+                		</c:when>
+                		<c:otherwise>
+                			<c:set var="baseUrl" value="noticesearch?condition=${condition }&keyword=${keword }&"/>
+                		</c:otherwise>
+                	</c:choose>
+                	<!-- 이전 -->
+                	<c:choose>
                 				<c:when test="${ 1 eq pageInfo.currentPage}">
                 					<li class="page-item disabled"><a class="page-link" href="#">이전</a></li>
                 				</c:when>
                 				<c:otherwise>
-                					<li class="page-item"><a class="page-link" href="noticelist?page=${ pageInfo.currentPage - 1 }">이전</a></li>
+                					<li class="page-item"><a class="page-link" href="${baseUrl }page=${ pageInfo.currentPage - 1 }">이전</a></li>
                 				</c:otherwise>
                 			</c:choose>
                 			<!-- 페이징 갯수 -->
                 			<c:forEach begin="${pageInfo.startPage }" end="${pageInfo.endPage }" var="p">
 		                    	<li class="page-item">
-			                    	<a class="page-link" href="noticelist?page=${ p }">${ p }</a>
+			                    	<a class="page-link" href="${baseUrl }page=${ p }">${ p }</a>
 			                    </li>
 		                    </c:forEach>
                 			
@@ -116,53 +121,9 @@
 		                    	</li>
 		                	</c:when>
 		                	<c:otherwise>
-		                    	<li class="page-item"><a class="page-link" href="noticelist?page=${ pageInfo.currentPage + 1 }">다음</a></li>
+		                    	<li class="page-item"><a class="page-link" href="${baseUrl }page=${ pageInfo.currentPage + 1 }">다음</a></li>
 		                	</c:otherwise>
-		                	</c:choose>
-                			
-                		</c:when>
-                		
-                		
-                		
-                		<c:otherwise>
-                			<!-- 이전 -->
-                			<c:choose>
-                				<c:when test="${ 1 eq pageInfo.currentPage}">
-                					<li class="page-item disabled"><a class="page-link" href="#">이전</a></li>
-                				</c:when>
-                				<c:otherwise>
-                					<li class="page-item">
-                						<a class="page-link" 
-                							href="noticesearch?page=${ pageInfo.currentPage - 1 }&condition=${condition}&keyword=${keyword}">이전</a></li>
-                				</c:otherwise>
-                			</c:choose>
-                			<!-- 페이징 갯수 -->
-                			<c:forEach begin="${pageInfo.startPage }" end="${pageInfo.endPage }" var="p">
-	                			<li class="page-item">
-				                    <a class="page-link" 
-				                    	href="noticesearch?page=${ p }&condition=${condition}&keyword=${keyword}">${ p }</a>
-				                </li>
-			                </c:forEach>
-                			
-                			<!-- 다음 -->
-                			<c:choose>
-		                    <c:when test="${ pageInfo.maxPage eq pageInfo.currentPage}">
-		                    	<li class="page-item disabled">
-		                    		<a class="page-link" href="#">다음</a>
-		                    	</li>
-		                	</c:when>
-		                	<c:otherwise>
-		                    	<li class="page-item">
-		                    		<a class="page-link" 
-		                    		href="noticesearch?page=${ pageInfo.currentPage + 1 }&condition=${condition}&keyword=${keyword}">다음</a>
-		                    	</li>
-		                	</c:otherwise>
-		                	</c:choose>                			
-                			
-                		</c:otherwise>
-                	
-                	</c:choose>
-     
+		             </c:choose>				
                 </ul>
             </div>
 

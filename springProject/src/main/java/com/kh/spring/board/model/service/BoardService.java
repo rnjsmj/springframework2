@@ -36,10 +36,10 @@ public interface BoardService {
 	Board findById(int boardNo);
 	
 	// 게시글 삭제
-	int delete(int boardNo);
+	int deleteById(int boardNo);
 	
 	// 게시글 수정
-	int update(int boardNo);
+	int updateByBoard(Board board);
 	
 	//===== 댓글 =====
 	

@@ -13,6 +13,9 @@
  				CREATE_DATE createDate
  		  FROM
  		  		NOTICE
+ 		 ORDER
+ 		    BY
+ 		    	NOTICE_NO DESC
  	</select>
  	
  	<!-- 전체 행 조회 -->

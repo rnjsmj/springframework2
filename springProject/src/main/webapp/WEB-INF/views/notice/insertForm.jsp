@@ -48,7 +48,7 @@
                 <table style="align:center">
                     <tr>
                         <th><label for="title">제목</label></th>
-                        <td><input type="text" id="title" class="form-control" name="noticeTitle" required></td>
+                        <td><input type="text" id="title" class="form-control" name="noticeTitle" maxlength="10" required></td>
                     </tr>
                     <tr>
                         <td colspan="2"><input type="hidden" id="writer" class="form-control" value="${ sessionScope.loginUser.userId }" name="noticeWriter"></td>

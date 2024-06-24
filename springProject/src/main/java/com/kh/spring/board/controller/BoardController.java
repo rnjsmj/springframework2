@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.kh.spring.board.model.service.BoardService;
 import com.kh.spring.board.model.vo.Board;
@@ -193,6 +194,7 @@ public class BoardController {
 		// 전달된 파일이 존재할 경우 => 파일 업로드
 		
 		if(!upfile.getOriginalFilename().equals("")) {
+			/*
 			//uploadFiles 디렉토리에 파일 업로드
 			//이름 변경 :  KH_년월일시분초_랜덤값.확장자
 			String originName = upfile.getOriginalFilename();
@@ -214,11 +216,13 @@ public class BoardController {
 				e.printStackTrace();
 			} catch (IOException e) {
 				e.printStackTrace();
-			}
+			}*/
+			
+			
 			
 			//Board 객체에 originName + changeName 값 저장 (첨부파일이 존재한다는 조건일 경우의 코드이므로 값 지정해줘야 함!)
-			board.setOriginName(originName);
-			board.setChangeName(savePath + changeName);
+			board.setOriginName(upfile.getOriginalFilename());
+			board.setChangeName(saveFile(upfile, session));
 		} 
 		
 		
@@ -233,5 +237,130 @@ public class BoardController {
 			return "common/errorMsg";
 		}
 
+	}
+	
+	
+	
+	// 상세보기
+	@GetMapping("board-detail")
+	public ModelAndView findById(@RequestParam("boardNo") int boardNo, ModelAndView mv) {
+		//ModelAndView의 장점..???
+		
+		//reqeust로 넘어온 파라미터는 String 값인데 int로 받을 수 있는 이유?
+		//String은 참조형이므로 기본형인 int로 변환할 수 없음
+		//==> Integer.parseInt() 를 통해서 parsing 수행 ! 
+		//Object obj = 123;
+		//Object는 참조형이므로 obj의 값은 주소가 들어가야 함
+		// int형 데이터가 대입되려면 참조형(Integer)으로 포장되어야 함 : auto boxing
+		
+		// 서비스 호출
+		
+		if(boardService.increaseCount(boardNo)>0) {
+			//응답화면 지정
+			mv.addObject("board", boardService.findById(boardNo)).setViewName("board/detail");
+			
+		} else {
+			
+			mv.addObject("errorMsg", "게시글 상세조회에 실패했습니다.").setViewName("common/errorPage");
+		}
+		
+		return mv;
+	}
+	
+	
+	// 삭제
+	/**
+	 * deleteById : Client(게시글 작성자)에게 정수형의 boardNo를 전달받아 BOARD 테이블에 존재하는 STATUS 컬럼의 값을 'N'으로 갱신
+	 * 
+	 * @param boardNo : 각 행을 식별하기 위한 PK
+	 * @param filePath : 요청 처리 성공 시 첨부파일을 제거하기 위한 파일이 저장되어있는 경로 및 파일명 
+	 * 
+	 * @return : 반환된 View의 논리적인 경로
+	 */
+	@PostMapping("boardDelete")
+	public String deleteById(int boardNo, String filePath, Model model, HttpSession session) {
+		if(boardService.deleteById(boardNo)>0) {
+			
+			if(!"".equals(filePath)) {
+				// filePath 매개변수가 post로 넘어온 key값과 매핑되지 않으면 equals() 메서드를 사용하는 경우
+				// NullPointerException이 발생할 수 있음
+				// => 빈 문자열 리터럴을 기준으로 equals() 메서드를 사용하면 이와 같은 예외 발생 방지
+				
+				new File(session.getServletContext().getRealPath(filePath)).delete();
+			}
+			
+			session.setAttribute("alertMsg", "게시글이 삭제되었습니다.");
+			return "redirect:/boardlist";
+			
+			
+		} else {
+			model.addAttribute("errorMsg", "게시글 삭제 실패");
+			return "common/errorPage";
+		}
+		
+	}
+	
+	@PostMapping("boardUpdateForm")
+	public ModelAndView boardUpdateForm(int boardNo, ModelAndView mv) {
+		
+		mv.addObject("board", boardService.findById(boardNo)).setViewName("board/updateForm");
+		return mv;
+		
+	}
+	
+	@PostMapping("boardUpdate")
+	public String updateById(Board board, MultipartFile reupFile, HttpSession session,Model model) {
+		
+		// 새로운 첨부파일이 발생한 경우 새로운 첨부파일 정보로 수정해야 함
+		if (!reupFile.getOriginalFilename().equals("")) {
+			board.setOriginName(reupFile.getOriginalFilename());
+			board.setChangeName(saveFile(reupFile, session));
+		}
+		
+		if(boardService.updateByBoard(board) > 0) {
+			
+			session.setAttribute("alertMsg", "게시글이 수정되었습니다.");
+			return "redirect:/board-detail?boardNo=" + board.getBoardNo();
+			
+		} else {
+			
+			model.addAttribute("errorMsg", "게시글 수정 중 오류가 발생하였습니다.");
+			return "common/errorPage";
+		}
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	// 파일 업로드 메서드
+	public String saveFile(MultipartFile upfile, HttpSession session) {
+		//uploadFiles 디렉토리에 파일 업로드
+		//이름 변경 :  KH_년월일시분초_랜덤값.확장자
+		String originName = upfile.getOriginalFilename();
+		String ext = originName.substring(originName.lastIndexOf("."));
+		//랜덤값
+		//Math.random(); >> 0.0 ~ 0.999999999999 의 값
+		int num = (int) (Math.random() * 900) + 100; // 100 위치 : 범위, 1 위치 : 시작값
+		//년월일시분초 
+		String currentTime = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+		//업로드 경로 : 프로그램 전역에서 접근할 수 있는 Application 객체를 사용
+		String savePath = session.getServletContext().getRealPath("/resources/uploadFiles/");	
+		
+		String changeName = "KH_" + currentTime + "_" + num + ext;
+		
+		//파일 업로드
+		try {
+			upfile.transferTo(new File(savePath + changeName));
+		} catch (IllegalStateException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return "resources/uploadFiles/" + changeName;
 	}
 }
