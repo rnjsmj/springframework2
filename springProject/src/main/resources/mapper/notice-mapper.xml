@@ -81,4 +81,7 @@
  	     WHERE
 	     		NOTICE_NO = #{noticeNo}
  	</delete>
+ 	
+ 	
+ 	
  </mapper>

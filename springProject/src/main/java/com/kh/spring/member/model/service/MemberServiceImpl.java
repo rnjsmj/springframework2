@@ -48,7 +48,14 @@ public class MemberServiceImpl implements MemberService {
 		return memberRepository.delete(sqlSession, userId);
 	}
 
-	
-	
+	@Override
+	public int idCheck(String checkId) {
+		return memberRepository.idCheck(sqlSession, checkId);
+	}
+
+	@Override
+	public int changePwd(Member member) {
+		return memberRepository.changePwd(sqlSession, member);
+	}
 	
 }

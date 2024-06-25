@@ -14,4 +14,5 @@
     <fullyQualifiedTypeName name="org.mybatis.spring.SqlSessionTemplate"/>
     <fullyQualifiedTypeName name="java.util.Map"/>
     <fullyQualifiedTypeName name="com.kh.spring.common.model.template.PageTemplate"/>
+    <fullyQualifiedTypeName name="javax.servlet.http.HttpServletResponse"/>
 </qualifiedTypeNameHistroy>

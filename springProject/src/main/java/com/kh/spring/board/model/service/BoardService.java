@@ -41,6 +41,10 @@ public interface BoardService {
 	// 게시글 수정
 	int updateByBoard(Board board);
 	
+	
+	// 이미지 게시판 목록 조회
+	List<Board> selectImages();
+	
 	//===== 댓글 =====
 	
 	// 1. AJAX를 활용한 댓글 목록 조회 => 2. MyBatis를 이용한 댓글 조회

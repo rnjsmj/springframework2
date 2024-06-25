@@ -17,8 +17,12 @@ public interface MemberService {
 	
 	//회원 탈퇴
 	int delete(String userId);
+
 	
 	//아이디 중복 체크
+	int idCheck(String checkId);
+
+	int changePwd(Member member);
 	
 	//메일 인증
 }

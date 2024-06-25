@@ -22,7 +22,8 @@
                 	<!-- not null => required -->
                     <label for="userId">* ID : </label>
                     <input type="text" class="form-control" id="userId" placeholder="Please Enter ID" name="userId" required> <br>
-
+					<div id="checkResult" style="display:none; font-size:0.7em;"></div><br><br>
+					
                     <label for="userPwd">* Password : </label>
                     <input type="password" class="form-control" id="userPwd" placeholder="Please Enter Password" name="userPwd" required> <br>
 
@@ -52,10 +53,52 @@
                 </div> 
                 <br>
                 <div class="btns" align="center">
-                    <button type="submit" class="btn btn-primary">회원가입</button>
+                    <button type="submit" class="btn btn-primary" id="join-btn" disabled>회원가입</button>
                     <button type="reset" class="btn btn-danger">초기화</button>
                 </div>
             </form>
+            <script>
+            	$(() => {
+            		
+            		const $idInput = $('.form-group #userId');
+            		const $checkResult = $('#checkResult');
+            		const $joinSubmit = $('#join-btn');
+            		
+            		$idInput.keyup(() => {
+            			
+            			console.log($idInput.val());
+            			
+            			//불필요한 DB 접근을 제한하기 위해 다섯글자 이상으로 입력했을 때만 AJAX 요청을 보내서 체크
+            			if($idInput.val().length >= 5) {
+            				$.ajax({
+            					url:'idcheck',
+            					type:'get',
+            					data : {checkId : $idInput.val()},
+            					success : (response) => {
+            						//console.log(response); >>> NNNNN 또는 NNNNY 반환
+            						if(response.substr(4) === 'N') { //NNNNN => 증복
+            							$checkResult.show().css('color', 'crimson').text('중복된 아이디입니다.');
+            							$joinSubmit.attr('disabled', true);
+            						} else {
+            							$checkResult.show().css('color', 'lightgreen').text('사용 가능한 아이디입니다.');
+            							$joinSubmit.attr('disabled', false);
+            						}
+            					},
+            					error : () => {
+            						console.log('아이디 중복체크 중 오류 발생');
+            					}
+            				});
+            			} else {
+            				$checkResult.hide();
+            				$joinSubmit.attr('disabled', true);
+            			}
+            			
+            		});
+            		
+            		
+            		
+            	});
+            </script>
         </div>
         <br><br>
 

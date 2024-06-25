@@ -364,4 +364,14 @@ public class BoardController {
 		
 		return "resources/uploadFiles/" + changeName;
 	}
+	
+	
+	@GetMapping("image-board")
+	public String imgaes(Model model) {
+		
+		List<Board> images = boardService.selectImages();
+		model.addAttribute("board", images);
+		
+		return "board/imageList";
+	}
 }

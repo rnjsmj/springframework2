@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.kh.spring.member.model.service.MemberService;
@@ -292,6 +293,36 @@ public class MemberController {
 		}
 		
 	}
+	
+	@ResponseBody
+	@GetMapping("idcheck")
+	public String checkId(String checkId) {
+		
+		//log.info(checkId);
+		
+		//int result = memberService.idCheck(checkId);
+		
+		return  memberService.idCheck(checkId) > 0 ? "NNNNN" : "NNNNY";
+	}
+	
+	@ResponseBody
+	@PostMapping(value="change-pwd", produces="text/html; charset=UTF-8")
+	public String changePwd(Member member, String changePwd) {
+		//전달 받은 사용자 아이디와 기존 비밀번호를 Member 객체로, 변경할 비밀번호를 changePwd로 받음
+		Member loginUser = memberService.login(member);
+		// 회원 정보가 일치하는 경우 변경할 비밀번호를 암호화 하여 member 객체에 저장하고,
+		// 해당 member 객체를 Service에 전달하여 비밀번호 변경 구문 수행
+		// 데이터 변경에 성공하면 Y, 성공하지 못하면 N 응답
+		// 만약 회원 정보가 일치하지 않은 경우 "WrongPwd" 응답
+		if(pwdEncoder.matches(member.getUserPwd(), loginUser.getUserPwd())) { 
+//			log.info("변경 비밀번호 암호문 : {}", pwdEncoder.encode(changePwd));
+			member.setUserPwd(pwdEncoder.encode(changePwd));
+			return memberService.changePwd(member) > 0 ? "Y" : "N"; 
+		} else { 
+			return "WrongPwd";
+		}
+	}
+	
 	
 	
 	

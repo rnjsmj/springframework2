@@ -187,4 +187,25 @@
 		 		BOARD_NO = #{boardNo}
 		   		
 	</update>
+	
+	<!-- 이미지게시판 목록 조회 -->
+ 	<select id="selectImages" resultType="board">
+		SELECT
+		        CHANGE_NAME changeName,
+		        BOARD_TITLE boardTitle,
+		        USER_NAME boardWriter,
+		        BOARD_CONTENT boardContent,
+		        CREATE_DATE createDate
+		  FROM
+		        BOARD, MEMBER
+		 WHERE
+		        BOARD.BOARD_WRITER = MEMBER.USER_ID
+		   AND
+		        CHANGE_NAME IS NOT NULL
+		   AND
+		   		BOARD.STATUS = 'Y'
+		 ORDER 
+		    BY
+		        BOARD_NO DESC
+ 	</select>
 </mapper>
