@@ -53,6 +53,146 @@
 		
 	
 	</script>
+	
+	
+	<h3> DB에서 SELECT문을 이용하여 조회했다는 가정하에 결과를 VO 객체로 응답받아 화면상에 출력 </h3>
+	조회 음식 번호 : <input type="number" id="menuNo" /><br><br>
+	<button id="select-btn">조회</button>
+	<!-- 숫자입력 => 조회버튼 => 해당 숫자 버튼에 해당하는 메뉴를 조회하여 메뉴 객체의 필드 내용을 출력 -->
+	<div id="today-menu">
+	
+	</div>
+	
+	<script>
+		
+		window.onload = () => {
+			
+			document.getElementById('select-btn').onclick = () => {
+				
+				$.ajax({
+					//get방식의 경우 data가 아닌 쿼리스트링으로 key value set을 전송할 수도 있음
+					//url : 'ajax2',
+					url : 'ajax3',
+					type : 'get',
+					data : {
+						menuNumber : document.getElementById('menuNo').value
+					},
+					success : (result) => {
+						console.log(result);
+						
+						const obj = {
+							"menuNumber" : "1",
+							"menuName" : "열무국수",
+							"price" : "8000",
+							"material" : "열무김치"
+						}
+						
+						console.log(obj);
+						
+						const menu = '<ul>오늘의 메뉴 : '
+									+ '<li>' + result.menuName + '</li>'
+									+ '<li>' + result.price + '원</li>'
+									+ '<li> 재료 : ' + result.material + '</li>';
+									
+						document.getElementById('today-menu').innerHTML = menu;
+					},
+					error : e => {
+						console.log(e);
+					}
+					
+					
+				});
+			};
+			
+		}
+	
+	
+	</script>
+	
+	
+	
+	
+	
+	<h3> 3. DB에서 SELECT문을 이용하여 조회된 리스트를 응답받아 출력 </h3>
+	<button onclick="findAll()">메뉴전체조회</button>
+	<br><br>
+	
+	<table border="1" id="find-result">
+		<thead>
+			<tr>
+				<th>메뉴명</th>
+				<th>가격</th>
+				<th>재료</th>
+			</tr>
+		</thead>
+		<tbody id="tbody">
+		
+		</tbody>
+	</table>
+	
+	<script>
+	function findAll() {
+	
+		$.ajax({
+			url:'find',
+			type:'get',
+			success: result => {
+				
+				console.log(result);
+				
+				/*
+					<tr>
+						<td>김치찌개</td>
+						...
+					</tr>
+				
+				*/
+				//map((순차적으로 접근한 요소, 해당 요소 인덱스) => {})
+				
+				result.map( (o, i) => {
+					/* console.log(o);
+					console.log(i); */
+					
+					const tbodyEl = document.getElementById('tbody');
+					const trEl = document.createElement('tr'); //요소 생성 메서드
+					const tdFirst = document.createElement('td');
+					
+					const firstText = document.createTextNode(o.menuName);
+					tdFirst.style.width = '200px';
+					tdFirst.appendChild(firstText);
+					console.log(tdFirst);
+					
+					const tdSecond= document.createElement('td');
+						
+					const secondText = document.createTextNode(o.price);
+					tdSecond.style.width = '200px';
+					tdSecond.appendChild(secondText);
+					console.log(tdSecond);
+					
+					const tdThird = document.createElement('td');
+					
+					const thirdText = document.createTextNode(o.material);
+					tdThird.style.width = '200px';
+					tdThird.appendChild(thirdText);
+					console.log(tdThird);
+					
+					trEl.appendChild(tdFirst); // 해당 요소 안에 자식 요소로 추가
+					trEl.appendChild(tdSecond);
+					trEl.appendChild(tdThird);
+					
+					console.log(trEl);
+					
+					tbodyEl.appendChild(trEl);
+				});
+				
+				
+				
+			}
+		});
+		
+	}
+	</script>
+	
 
 </body>
 </html>

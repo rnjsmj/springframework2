@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.session.RowBounds;
 
 import com.kh.spring.board.model.vo.Board;
+import com.kh.spring.board.model.vo.Reply;
 
 public interface BoardService {
 	
@@ -44,14 +45,23 @@ public interface BoardService {
 	
 	// 이미지 게시판 목록 조회
 	List<Board> selectImages();
+
+
+	
 	
 	//===== 댓글 =====
 	
 	// 1. AJAX를 활용한 댓글 목록 조회 => 2. MyBatis를 이용한 댓글 조회
-	
-	
+	List<Reply> selectReply(int boardNo);
+
 	// 댓글 작성
-	
+	int insertReply(Reply reply);
+
+	// 하나의 Board에 달린 댓글과 함께 조회
+	Board boardAndReply(int boardNo);
+
+
 	
 	// ===== Top-M =====
+	List<Board> findTopFiveBoard();
 }

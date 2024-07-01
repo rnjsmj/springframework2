@@ -2,12 +2,19 @@ package com.kh.ajax.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.google.gson.Gson;
+import com.kh.ajax.Menu;
 
 @Controller
 public class AjaxController {
@@ -81,4 +88,128 @@ public class AjaxController {
 		response.setContentType("text/html; charset=UTF-8");
 		writer.print("<h1>응답</h1> ");
 	}
+	
+	
+	@ResponseBody
+	@GetMapping(value="ajax2", produces="application/json; charset=UTF-8")
+	public String selectMenu(int menuNumber) {
+		
+		// 데이터 응답
+		
+		/* 가상 메뉴 테이블
+		 * ----------------------------------------
+		 * | 메뉴번호 | 메뉴이름 |  가격  |  재료  |
+		 * ----------------------------------------
+		 * |  1     | 열무국수 | 8000  | 열무  |
+		 * ----------------------------------------
+		 * 
+		 * 
+		 * JSON(Java Script Object Notation) : 자바 스크립트 객체 표기법
+		 * => [], {} 형태
+		 */
+		
+		//VO 필드를 통해 StringBuilder로 JSON 형태 문자열 생성하여 반환하는 방법
+		// => 
+		
+		
+		 Menu menu = new Menu(1, "순두부찌개", 8000, "순두부");
+		 /* 
+		 * StringBuilder sb = new StringBuilder(); sb.append("{");
+		 * sb.append("menuNumber : '" + menu.getMenuNumber());
+		 * sb.append(", 'menuName: '" + menu.getMenuName());
+		 * sb.append(", 'price : '" + menu.getPrice()); 
+		 * sb.append(", 'material: '" + menu.getMaterial() + "'");
+		 * 
+		 * //생성한 문자열을 텍스트 형식이 아닌 JSON 형태로 보내야 함 => produces의 형태를 application/json으로 변경!
+		 * 
+		 * 
+		 * 
+		 * 
+		 * return sb.toString();
+		 */ 
+		 //=> 정상적으로 json으로 파싱하지 못함
+		 // => JAVA에서 key-value 형태로 전송할 수 있는 것은 Map 밖에 없음
+		 // => JSON도 Map 형태!@!@!@!@!@!@
+		
+		//******자바스크립트 객체 형태의 문자열로 만들어서 전송******* 
+		 // javascript에서 해석할 수 있는 객체로 전달하기 위해
+		 // HashMap을 상속받은 JSONObject 라이브러리를 이용해 
+		 // put을 통해 key-value 값을 추가하고, 
+		 // AJAX 요청에 대해 응답할 때 JSONObjcet.toString()을 호추랗여 StringBuffer를 통해 문자열 데이터로 전송 가능
+		 //해당 문자열 데이터를 객체로 해석시키기 위해 produces 속성의 값을 json 형태로 전송하도록 지정
+		 
+		 
+		JSONObject jObj = new JSONObject();
+		jObj.put("menuNumber", menu.getMenuNumber());
+		jObj.put("menuName", menu.getMenuName());
+		jObj.put("price", menu.getPrice());
+		jObj.put("material", menu.getMaterial());
+		
+		return jObj.toJSONString();
+		
+		
+	}
+	
+	/*
+	@ResponseBody
+	@GetMapping(value="ajax3", produces="application/json; charset=UTF-8")
+	public String ajax3Method(int menuNumber) {
+		
+		Menu menu = new Menu(menuNumber, "순두부찌개", 8000, "순두부");
+		
+		return new Gson().toJson(menu);
+	}*/
+	
+	@ResponseBody
+	@GetMapping(value="ajax3", produces="application/json; charset=UTF-8")
+	public Menu ajax3Method(int menuNumber) {
+		
+		Menu menu = new Menu(menuNumber, "순두부찌개", 8000, "순두부");
+		
+		return menu;
+	}
+	
+	
+	@ResponseBody
+	@GetMapping(value="find", produces="application/json; charset=UTF-8")
+	public String findAll() {
+		
+		List<Menu> menus = new ArrayList();
+		menus.add(new Menu(1, "마파두부", 15000, "두부"));
+		menus.add(new Menu(2, "돈까스", 9000, "돼지고기"));
+		menus.add(new Menu(3, "열무국수", 8500, "열무김치"));
+		
+		//selectList 조회 결과 => menus
+		//List<menu> list = menuService.findAll();
+		
+		// 각각 하나의 메뉴 정보가 객체로 담겨야 함
+		// => 하나의 객체 배열로 전송
+		// [{ 마파두부 ... }, { 돈까스 ... }, { 열무국수 ... }]
+		
+		/*
+		JSONObject jObj1 = new JSONObject();
+		jObj1.put("menuNumber", menus.get(0).getMenuNumber());
+		jObj1.put("menuName", menus.get(0).getMenuName());
+		jObj1.put("price", menus.get(0).getPrice());
+		jObj1.put("material", menus.get(0).getMaterial());*/
+		// .... 위와 같은 같은 방식으로 JSONObject를 List의 Menu 객체 수 만큼 생성해야 함
+		// 여러개의 객체를 add할 수 있는 ArrayList를 상속받은 JSONArray 클래스로 JSON Array 객체 생성
+		// => 반복문을 사용하여 JSONArray에 Menu 객체 추가
+		
+		JSONArray jArr = new JSONArray();
+		/*
+		for(int i=0; i < menus.size(); i++) {
+			JSONObject jObj = new JSONObject();
+			jObj.put("menuNumber", menus.get(i).getMenuNumber());
+			jObj.put("menuName", menus.get(i).getMenuName());
+			jObj.put("price", menus.get(i).getPrice());
+			jObj.put("material", menus.get(i).getMaterial());
+			
+			jArr.add(jObj);
+		}*/ 
+		//위와 같이 반복문을 사용하여 JSONArray에 객체를 추가하는 과정을 Gson을 사용하여 한번에 수행
+		
+		return new Gson().toJson(menus);
+	}
+	
 }

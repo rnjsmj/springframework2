@@ -106,8 +106,9 @@
         </div>
         <div id="header_2">
             <ul>
-                <li><a href="">HOME</a></li>
-                <li><a href="noticelist">공지사항</a></li>
+                <li><a href="/spring">HOME</a></li>
+                <!-- <li><a href="noticelist">공지사항</a></li> -->
+                <li><a href="notices">공지사항</a></li>
                 <li><a href="boardlist">자유게시판</a></li>
                 <li><a href="image-board">사진게시판</a></li>
             </ul>

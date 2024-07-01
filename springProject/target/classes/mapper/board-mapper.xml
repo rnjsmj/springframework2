@@ -208,4 +208,128 @@
 		    BY
 		        BOARD_NO DESC
  	</select>
+ 	
+ 	
+ 	<!-- 댓글 조회 -->
+ 	<select id="selectReply" parameterType="_int" resultType="reply">
+ 		SELECT
+ 				REPLY_NO replyNo,
+ 				REPLY_CONTENT replyContent,
+ 				REPLY_WRITER replyWriter,
+ 				TO_CHAR(CREATE_DATE, 'YYYY-MM-DD') AS "createDate"
+ 		  FROM
+ 		  		REPLY
+ 		 WHERE
+ 		 		STATUS = 'Y'
+ 		   AND
+ 		   		REF_BNO = #{boardNo}
+ 		 ORDER
+ 		    BY
+ 		    	REPLY_NO DESC
+ 	</select>
+ 	
+ 	<!--  댓글 등록 -->
+ 	<insert id="insertReply" parameterType="reply">
+ 		INSERT 
+ 		  INTO
+ 		  		REPLY
+ 		  		(
+ 		  		REPLY_NO,
+ 		  		REPLY_CONTENT,
+ 		  		REPLY_WRITER,
+ 		  		REF_BNO
+ 		  		)
+ 		 VALUES
+ 		 		(
+ 		 		SEQ_RNO.NEXTVAL,
+ 		 		#{replyContent},
+ 		 		#{replyWriter},
+ 		 		#{refBoardNo}
+ 		 		)
+ 		 		
+ 	</insert>
+ 	
+ 	
+ 	<resultMap type="board" id="boardResultSet">
+ 		<id column="BOARD_NO" property="boardNo"/>
+ 		<result column="BOARD_TITLE" property="boardTitle" />
+ 		<result column="BOARD_CONTENT" property="boardContent" />
+ 		<result column="BOARD_WRITER" property="boardWriter" />
+ 		<result column="COUNT" property="count" />
+ 		<result column="ORIGIN_NAME" property="originName" />
+ 		<result column="CHANGE_NAME" property="changeName" />
+ 		<result column="B_CREATE_DATE" property="createDate" />
+ 		<collection resultMap="replyResultSet" property="replyList"/>
+ 	</resultMap>
+ 	
+ 	<resultMap id="replyResultSet" type="reply">
+ 		<id column="REPLY_NO" property="replyNo" />
+ 		<id column="REPLY_CONTENT" property="replyContent" />
+ 		<id column="REPLY_WRITER" property="replyWriter" />
+ 		<id column="R_CREATE_DATE" property="createDate" />
+ 		<id column="REF_BNO" property="refBoardNo" />
+ 	</resultMap>
+ 	
+ 	<!-- 게시물 하나에 달린 댓글 목록과 함께 조회  -->
+ 	<select id="boardAndReply" parameterType="_int" resultMap="boardResultSet">
+ 		SELECT
+ 				BOARD_NO,
+                BOARD_TITLE,
+                BOARD_WRITER,
+                BOARD_CONTENT,
+                COUNT,
+                ORIGIN_NAME,
+                CHANGE_NAME,
+				REPLY_NO,
+				REPLY_CONTENT,
+				REPLY_WRITER,
+				REF_BNO,
+				BOARD.CREATE_DATE B_CREATE_DATE,
+				REPLY.CREATE_DATE R_CREATE_DATE
+		  FROM
+		  		BOARD
+		  LEFT
+		  JOIN
+		  		REPLY ON(BOARD_NO = REF_BNO)
+		 WHERE
+		 		BOARD_NO = #{boardNo}
+ 		
+ 	</select>
+ 	
+ 	
+ 	<!-- 조회수 상위 5개 게시글 조회 -->
+ 	<select id="findTopBoard" resultType="board">
+ 		<include refid="selectBoard"/>
+ 		  FROM
+ 		  		(
+		 		SELECT
+		 				BOARD_NO,
+		 				BOARD_TITLE,
+		 				BOARD_WRITER,
+		 				BOARD_CONTENT,
+		 				COUNT,
+		 				CREATE_DATE,
+		 				ORIGIN_NAME,
+		 				CHANGE_NAME
+		 		  FROM
+		 		  		BOARD
+		 		 WHERE
+		 		        STATUS = 'Y'
+		 		 ORDER
+		 		    BY
+		 		    	COUNT DESC
+ 		    	)
+ 		 WHERE
+ 		 		ROWNUM BETWEEN 1 AND 5
+ 	
+ 	</select>
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	
 </mapper>
